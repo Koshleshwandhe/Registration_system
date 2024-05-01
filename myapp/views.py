@@ -26,5 +26,8 @@ def signin(request):
         return redirect('login')
     return render(request,"signin.html")
 
+
 def main_screen(request):
-    return render(request,"main_screen.html")
+    # Fetch all user details from the database
+    users = User.objects.all()
+    return render(request, 'main_screen.html', {'users': users})

@@ -13,7 +13,7 @@
             text-align: center;
         }
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 50px auto;
             background-color: #fff;
             border-radius: 8px;
@@ -27,6 +27,24 @@
         p {
             color: #666;
             margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
         }
         a {
             display: inline-block;
@@ -44,8 +62,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Main Screen</h1>
-        <p>This is the main screen of our application. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam aliquam justo vitae tellus tempor, et tincidunt quam volutpat. Nam ac turpis nec arcu pharetra rhoncus.</p>
+        <h1>Registered User Data</h1>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>User ID</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.phone_number }}</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         <a href="{% url 'signin' %}">Return to Home</a>
     </div>
 </body>
