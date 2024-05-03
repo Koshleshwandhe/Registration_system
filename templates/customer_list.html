@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .customer-list {
+            flex: 1;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .customer-details {
+            flex: 1;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .customer-list, .customer-details {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Customer List</h1>
+    <input type="text" id="search-input" placeholder="Search by name...">
+    <div class="container">
+        <div class="customer-list" id="customer-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                    <tr class="customer-row" data-id="{{ customer.id }}">
+                        <td>{{ customer.id }}</td>
+                        <td>{{ customer.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="customer-details" id="customer-details">
+            <h2>Customer Details</h2>
+            <div id="customer-info"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const customerRows = document.querySelectorAll(".customer-row");
+            const customerDetails = document.getElementById("customer-info");
+            const searchInput = document.getElementById("search-input");
+
+            // Add event listener to search input
+            searchInput.addEventListener("input", function() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                filterCustomers(searchTerm);
+            });
+
+            function filterCustomers(searchTerm) {
+                customerRows.forEach(row => {
+                    const name = row.querySelector("td:nth-child(2)").textContent.trim().toLowerCase();
+                    if (name.includes(searchTerm)) {
+                        row.style.display = "table-row";
+                    } else {
+                        row.style.display = "none";
+                    }
+                });
+            }
+
+            customerRows.forEach(row => {
+                row.addEventListener("click", function() {
+                    // Remove active class from all rows
+                    customerRows.forEach(row => row.classList.remove("active"));
+                    // Add active class to the clicked row
+                    row.classList.add("active");
+
+                    // Fetch customer details based on the selected customer ID
+                    const customerId = row.getAttribute("data-id");
+                    fetchCustomerDetails(customerId);
+                });
+            });
+
+            function fetchCustomerDetails(customerId) {
+                fetch(`https://jsonplaceholder.typicode.com/users/${customerId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const customerInfo = `
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Email:</strong> ${data.email}</p>
+                        <p><strong>Phone:</strong> ${data.phone}</p>
+                        <p><strong>Website:</strong> ${data.website}</p>
+                    `;
+                    customerDetails.innerHTML = customerInfo;
+                })
+                .catch(error => {
+                    console.error('Error fetching customer details:', error);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

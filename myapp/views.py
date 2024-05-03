@@ -4,28 +4,25 @@ from django.http import HttpResponse
 from .models import User
 from .authentication import generate_auth_token
 
+import requests
+from django.shortcuts import render
+
+def fetch_customer_data():
+    # Make a GET request to the open-source API to fetch customer data
+    url = "https://jsonplaceholder.typicode.com/users"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []
+
 def login(request):
-    if request.method == 'POST':
-        id = request.POST.get('id')
-        password = request.POST.get('password')
-        user_type = request.POST.get('user_type')
-
-        # Generate the base64 authentication token
-        auth_token = generate_auth_token(id, password)
-
-        # Make a GET request to the API endpoint with the obtained token
-        url = f"https://centrum-backend.vercel.app/login/{user_type}/dashboard/ALL"
-        headers = {'Authorization': f'Basic {auth_token}'}
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
-            # Authentication successful, redirect to main screen
-            data = response.json()
-            return render(request, 'main_screen.html', {'data': data})
-        else:
-            # Authentication failed, return error message
-            return HttpResponse("Invalid username or password.")
-    return render(request, "login.html")
+    if request.method == 'GET':
+        # Fetch customer data
+        customers = fetch_customer_data()   
+        return render(request, 'customer_list.html', {'customers': customers})
+    else:
+        return HttpResponse("Invalid request method")
 
 def signin(request):
     if request.method == 'POST':
