@@ -89,7 +89,12 @@
             <input type="text" id="id" name="id">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password">
-            <input type="submit" value="Login">
+            <label for="user_type">User Type:</label><br>
+        <select id="user_type" name="user_type">
+            <option value="admin">Admin</option>
+            <option value="dealer">Dealer</option>
+        </select><br><br>
+        <input type="submit" value="Login">
         </form>
         <a href="{% url 'signin' %}">Create an account</a>
     </div>

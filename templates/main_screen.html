@@ -61,30 +61,18 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Registered User Data</h1>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>User ID</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.phone_number }}</td>
-                    <td>{{ user.email }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <a href="{% url 'signin' %}">Return to Home</a>
+    <h1>Main Screen</h1>
+    {% if data %}
+    <div class="card-container">
+        {% for item in data %}
+        <div class="card">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
     </div>
+    {% else %}
+    <p>No data available.</p>
+    {% endif %}
 </body>
 </html>
